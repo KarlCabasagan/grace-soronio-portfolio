@@ -30,7 +30,7 @@ export default function Footer() {
                 <span className="tabular-nums">700h</span> OJT Available
               </span>
               <span className="inline-flex items-center rounded-pill border border-accent/30 bg-accent-soft px-3 py-1 text-accent-light">
-                CGPA <span className="tabular-nums ml-1">1.67351</span> · Dean&apos;s Lister
+                Dean&apos;s Lister · Academic Honors
               </span>
             </div>
 

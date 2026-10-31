@@ -84,8 +84,8 @@ export default function CaseStudy() {
           <p className="text-md text-ink">
             BS Computer Applications, major in Embedded Systems, MSU-IIT
           </p>
-          <p className="tabular-nums font-mono text-sm text-muted">
-            CGPA: 1.67351 · DEAN’S LISTER
+          <p className="font-mono text-sm text-muted">
+            DEAN’S LISTER · MSU-IIT
           </p>
         </div>
       </div>

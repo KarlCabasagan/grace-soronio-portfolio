@@ -148,11 +148,10 @@ export default function Contact() {
         </h1>
         <p className="mt-md text-lead text-ink-2">
           Fourth-year BS Computer Applications student majoring in Embedded Systems at Mindanao State
-          University – Iligan Institute of Technology (MSU-IIT), with a CGPA of{' '}
-          <span className="tabular-nums font-medium text-ink">1.67351</span> (Dean’s Lister).
+          University – Iligan Institute of Technology (MSU-IIT), recognized as a Dean’s Lister.
           Actively seeking a{' '}
           <span className="tabular-nums font-semibold text-accent-light">700-hour</span> On-the-Job
-          Training (OJT) role in embedded systems, firmware, IoT, or software engineering.
+          Training (OJT) placement in embedded systems, firmware, IoT, or software engineering.
         </p>
       </ScrollReveal>
 
