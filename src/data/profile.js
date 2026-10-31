@@ -295,8 +295,8 @@ export const developerProfile = {
   toolchain,
   languages,
   bio: [
-    'Fourth-year BS Computer Applications student at Mindanao State University – Iligan Institute of Technology (MSU-IIT) majoring in Embedded Systems, with a solid academic standing of CGPA 1.67351 (Dean’s Lister).',
-    'Motivated by turning raw cyber-physical concepts into working, reliable systems through disciplined testing. Developed 17 authentic projects spanning bare-metal 8-bit AVR assembly, multi-tasking FreeRTOS telemetry, FPGA hardware-deterministic FSM logic, edge machine learning electronic nose arrays, and full-stack web platforms.',
+    'Fourth-year BS Computer Applications student at Mindanao State University – Iligan Institute of Technology (MSU-IIT) majoring in Embedded Systems and recognized as a Dean’s Lister.',
+    'Focused on turning cyber-physical concepts into robust, reliable systems through disciplined hardware testing and firmware validation. Developed 17 authentic projects spanning bare-metal 8-bit AVR assembly, multi-tasking FreeRTOS telemetry, FPGA hardware-deterministic FSM logic, edge machine learning electronic nose arrays, and full-stack web platforms.',
     'Currently seeking a 700-hour On-the-Job Training (OJT) role in Embedded Systems, Firmware, IoT, or Software Engineering to contribute effectively to production workflows and build impactful real-world solutions.',
   ],
 }

@@ -80,7 +80,7 @@ export default function Skills() {
           skills / cyber-physical toolchain &amp; bench
         </div>
         <h1 className="mt-sm font-display text-display font-semibold tracking-tight text-ink">
-          The toolchain behind the ledger.
+          The toolchain behind the builds.
         </h1>
         <p className="mt-md text-lead text-ink-2 max-w-[65ch]">
           Grouped by where the work happens: the bare silicon, the firmware kernel, the FPGA synthesis suite, the edge machine learning model, and the interface.

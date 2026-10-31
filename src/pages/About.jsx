@@ -67,8 +67,8 @@ function TimelineSection({ title, eyebrow, items, renderMeta, renderDetails }) {
 
 export default function About() {
   const bioList = developerProfile?.bio || [
-    'Fourth-year BS Computer Applications student at MSU-IIT majoring in Embedded Systems, with a solid academic standing of CGPA 1.67351 (Dean’s Lister).',
-    'Motivated by turning raw cyber-physical concepts into working, reliable systems through disciplined testing. Across 17 authentic projects, my work spans bare-metal 8-bit AVR assembly, multi-tasking FreeRTOS telemetry, FPGA hardware-deterministic FSM logic, edge machine learning electronic nose arrays, and full-stack web platforms.',
+    'Fourth-year BS Computer Applications student at MSU-IIT majoring in Embedded Systems and recognized as a Dean’s Lister.',
+    'Focused on turning cyber-physical concepts into robust, reliable systems through disciplined hardware testing and firmware validation. Across 17 authentic projects, my work spans bare-metal 8-bit AVR assembly, multi-tasking FreeRTOS telemetry, FPGA hardware-deterministic FSM logic, edge machine learning electronic nose arrays, and full-stack web platforms.',
     'Seeking a 700-hour On-the-Job Training (OJT) role in Embedded Systems, Firmware, IoT, or Software Engineering to contribute effectively to production workflows and build impactful real-world solutions.',
   ]
 
@@ -85,10 +85,10 @@ export default function About() {
       <header className="max-w-prose">
         <div className="flex items-center gap-xs font-mono text-xs uppercase-tracked text-accent-light">
           <span className="inline-block h-2 w-2 rounded-full bg-accent animate-pulse" />
-          about / the engineer behind the ledger
+          about / systems &amp; engineering focus
         </div>
         <h1 className="mt-sm font-display text-display font-semibold tracking-tight text-ink">
-          I like the part where it has to work.
+          Engineering dependable systems through disciplined testing.
         </h1>
         <p className="mt-md text-lead text-ink-2 max-w-[65ch]">
           {developerProfile?.subtitle ||
@@ -118,7 +118,7 @@ export default function About() {
                   <span className="inline-block h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
                   <span className="font-mono text-xs font-medium text-ink">700h OJT Ready</span>
                 </div>
-                <span className="font-mono text-xs text-muted tabular-nums">1.67351 CGPA</span>
+                <span className="font-mono text-xs text-accent-light">Dean&apos;s Lister</span>
               </div>
             </figure>
 
@@ -128,12 +128,6 @@ export default function About() {
                 Engineering Telemetry
               </h3>
               <dl className="mt-md divide-y divide-rule">
-                <div className="flex items-baseline justify-between gap-md py-sm">
-                  <dt className="font-mono text-xs text-muted">Cumulative GPA</dt>
-                  <dd className="font-mono text-sm font-semibold tabular-nums text-ink">
-                    {developerProfile?.cgpa || '1.67351'}
-                  </dd>
-                </div>
                 <div className="flex items-baseline justify-between gap-md py-sm">
                   <dt className="font-mono text-xs text-muted">Academic Honors</dt>
                   <dd className="text-sm font-medium text-accent-light">
@@ -214,11 +208,6 @@ export default function About() {
                   <div className="inline-flex items-center gap-xs rounded-pill border border-rule-2 bg-paper px-sm py-3xs text-xs font-mono text-accent-light">
                     <span>★</span>
                     <span>{item.honors}</span>
-                    {item.cgpa && (
-                      <span className="tabular-nums font-semibold text-ink">
-                        (CGPA {item.cgpa})
-                      </span>
-                    )}
                   </div>
                 )}
                 {item.details?.length ? (
