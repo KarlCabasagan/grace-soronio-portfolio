@@ -632,12 +632,12 @@ test('Mobile Drawer: Focus trapping, Escape dismissal, and Body scroll lock cont
   assert.ok(drawerCode.includes('window.innerWidth >= 1024'), 'Drawer auto-closes on desktop breakpoint >= 1024px');
 });
 
-test('Tabular Numerals: CGPA (1.67351) and OJT (700h) use tabular-nums font feature', () => {
+test('Tabular Numerals: OJT (700h) and numeric values use tabular-nums font feature', () => {
   const footerCode = fs.readFileSync(path.join(ROOT, 'src/components/Footer.jsx'), 'utf8');
   const notFoundCode = fs.readFileSync(path.join(ROOT, 'src/pages/NotFound.jsx'), 'utf8');
 
   // Footer
-  assert.ok(footerCode.includes('1.67351'), 'Footer contains authentic CGPA 1.67351');
+  assert.ok(footerCode.includes('700h'), 'Footer contains authentic 700h OJT target');
   assert.ok(footerCode.includes('tabular-nums'), 'Footer applies tabular-nums to numerical values');
 
   // NotFound
