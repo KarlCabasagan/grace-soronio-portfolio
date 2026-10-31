@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * ImageWithSkeleton: Network-resilient image loader featuring cyber-physical
  * shimmering skeleton states during slow network connectivity and smooth
- * 300ms crossfade entrance upon asset resolution.
+ * 400ms crossfade entrance upon asset resolution.
  */
 export default function ImageWithSkeleton({
   src,
@@ -19,13 +19,23 @@ export default function ImageWithSkeleton({
 }) {
   const [loaded, setLoaded] = useState(false)
   const [failed, setFailed] = useState(false)
+  const imgRef = useRef(null)
+
+  // Fast check: if the image is already cached and loaded by the browser, mark loaded immediately
+  useEffect(() => {
+    if (imgRef.current && imgRef.current.complete && imgRef.current.naturalWidth > 0) {
+      setLoaded(true)
+    }
+  }, [src])
 
   return (
     <div className={`relative overflow-hidden ${containerClassName}`}>
       {/* 1. Shimmering Skeleton Placeholder */}
       {!loaded && !failed && (
         <div
-          className={`absolute inset-0 z-10 flex flex-col items-center justify-center skeleton-shimmer ${aspectRatio}`}
+          className={`absolute inset-0 z-10 flex flex-col items-center justify-center skeleton-shimmer transition-opacity duration-300 ${
+            loaded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          } ${aspectRatio}`}
           aria-hidden="true"
         >
           {/* Subtle Cyber-Physical Micro-Chip Watermark */}
@@ -69,8 +79,9 @@ export default function ImageWithSkeleton({
           </span>
         </div>
       ) : (
-        /* 3. Actual Image with Smooth Crossfade */
+        /* 3. Actual Image with Smooth 400ms Crossfade */
         <img
+          ref={imgRef}
           src={src}
           alt={alt}
           width={width}
@@ -79,8 +90,8 @@ export default function ImageWithSkeleton({
           decoding={decoding}
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}
-          className={`${className} transition-opacity duration-300 ease-out ${
-            loaded ? 'opacity-100' : 'opacity-0'
+          className={`${className} transition-all duration-400 ease-out ${
+            loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.98]'
           }`}
         />
       )}

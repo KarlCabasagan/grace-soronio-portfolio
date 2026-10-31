@@ -98,8 +98,8 @@ export default function About() {
 
       {/* Main Grid: Portrait HUD (Col 1-5) and In-Depth Narrative (Col 6-12) */}
       <div className="mt-2xl grid gap-2xl lg:grid-cols-12 lg:items-start lg:gap-col">
-        {/* Left Column: Portrait & Telemetry HUD */}
-        <Reveal className="lg:col-span-5">
+        {/* Left Column: Portrait & Telemetry HUD (Direct smooth mount, no scroll pop-in) */}
+        <div className="lg:col-span-5">
           <div className="sticky top-24 space-y-lg">
             <figure className="relative mx-auto overflow-hidden rounded-card border border-rule bg-paper-2 shadow-card transition-transform duration-300 hover:border-rule-2">
               <ImageWithSkeleton
@@ -183,7 +183,7 @@ export default function About() {
               </div>
             </div>
           </div>
-        </Reveal>
+        </div>
 
         {/* Right Column: Bio Narrative & Categorized Milestones */}
         <div className="lg:col-span-7 space-y-2xl">

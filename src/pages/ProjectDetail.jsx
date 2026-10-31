@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { projects } from '../data/projects.js'
 import { galleryFor } from '../data/media.js'
 import ImageWithSkeleton from '../components/ImageWithSkeleton.jsx'
+import ImageZoomModal from '../components/ImageZoomModal.jsx'
 
 /**
  * Curated Quick Spec Sheet / HUD Telemetry for all 17 authentic projects.
@@ -264,6 +265,7 @@ export default function ProjectDetail() {
   const project = projects[index]
   const [mainImageFailed, setMainImageFailed] = useState(false)
   const [failedGalleryImages, setFailedGalleryImages] = useState({})
+  const [zoomedImage, setZoomedImage] = useState(null)
 
   if (!project) {
     return (
@@ -447,7 +449,18 @@ export default function ProjectDetail() {
           {mainImageFailed ? (
             <CircuitSchematicFallback project={project} />
           ) : (
-            <div className="overflow-hidden rounded-card border border-rule bg-paper-3 shadow-card">
+            <div
+              onClick={() =>
+                setZoomedImage({
+                  src: project.image,
+                  title: project.title,
+                  subtitle: project.subtitle,
+                  category: project.categoryLabel,
+                })
+              }
+              className="group relative cursor-zoom-in overflow-hidden rounded-card border border-rule bg-paper-3 shadow-card transition-all duration-200 hover:border-accent hover:shadow-elevated"
+              title="Click to enlarge and zoom"
+            >
               <ImageWithSkeleton
                 src={project.image}
                 alt={`${project.title}: ${project.subtitle}`}
@@ -458,8 +471,17 @@ export default function ProjectDetail() {
                 fallbackText={project.title}
                 aspectRatio="aspect-[16/10]"
                 containerClassName="w-full"
-                className="max-h-[70dvh] w-full object-cover"
+                className="max-h-[70dvh] w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.01]"
               />
+              <span className="absolute right-md top-md z-20 flex items-center gap-1.5 rounded-pill border border-accent/40 bg-paper/90 px-sm py-xs font-mono text-xs text-accent-light opacity-0 shadow-card backdrop-blur-md transition-all duration-200 group-hover:opacity-100 group-hover:scale-100 scale-95">
+                <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="9" cy="9" r="6" />
+                  <line x1="13.5" y1="13.5" x2="18" y2="18" />
+                  <line x1="9" y1="6" x2="9" y2="12" />
+                  <line x1="6" y1="9" x2="12" y2="9" />
+                </svg>
+                <span>Click to zoom</span>
+              </span>
             </div>
           )}
           <figcaption className="mt-sm max-w-[65ch] font-mono text-xs text-muted">
@@ -520,7 +542,16 @@ export default function ProjectDetail() {
                     return (
                       <figure
                         key={src}
-                        className="overflow-hidden rounded-card border border-rule bg-paper-3 shadow-card"
+                        onClick={() =>
+                          setZoomedImage({
+                            src,
+                            title: project.title,
+                            caption,
+                            category: project.categoryLabel,
+                          })
+                        }
+                        className="group relative cursor-zoom-in overflow-hidden rounded-card border border-rule bg-paper-3 shadow-card transition-all duration-200 hover:border-accent hover:shadow-elevated"
+                        title="Click to enlarge and zoom"
                       >
                         <ImageWithSkeleton
                           src={src}
@@ -531,6 +562,15 @@ export default function ProjectDetail() {
                           containerClassName="w-full"
                           className="aspect-[16/10] w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
                         />
+                        <span className="absolute right-xs top-xs z-20 flex items-center gap-1 rounded-pill border border-accent/40 bg-paper/90 px-xs py-3xs font-mono text-[11px] text-accent-light opacity-0 shadow-sm backdrop-blur-md transition-all duration-200 group-hover:opacity-100">
+                          <svg className="h-3 w-3" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="9" cy="9" r="6" />
+                            <line x1="13.5" y1="13.5" x2="18" y2="18" />
+                            <line x1="9" y1="6" x2="9" y2="12" />
+                            <line x1="6" y1="9" x2="12" y2="9" />
+                          </svg>
+                          <span>Zoom</span>
+                        </span>
                         <figcaption className="p-sm font-mono text-xs text-muted max-w-[65ch]">
                           {caption}
                         </figcaption>
@@ -660,6 +700,16 @@ export default function ProjectDetail() {
           </Link>
         </nav>
       </div>
+
+      {/* Interactive Enlarged Image Zoom Modal */}
+      <ImageZoomModal
+        src={zoomedImage?.src}
+        title={zoomedImage?.title}
+        subtitle={zoomedImage?.subtitle}
+        caption={zoomedImage?.caption}
+        category={zoomedImage?.category}
+        onClose={() => setZoomedImage(null)}
+      />
     </article>
   )
 }

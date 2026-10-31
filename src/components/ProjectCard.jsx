@@ -12,7 +12,12 @@ function Arrow() {
   )
 }
 
-export default function ProjectCard({ project, index, featured = false, eager = false }) {
+export default function ProjectCard({
+  project,
+  index,
+  featured = false,
+  eager = false,
+}) {
   return (
     <Link
       to={`/projects/${project.slug}`}
@@ -37,6 +42,8 @@ export default function ProjectCard({ project, index, featured = false, eager = 
           containerClassName="h-full w-full"
           className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
         />
+
+        {/* Index Pill */}
         <span className="absolute left-md top-md z-20 rounded-pill border border-rule-2 bg-paper/85 px-sm py-3xs font-mono text-xs tabular-nums text-ink-2 backdrop-blur-sm">
           {String(index + 1).padStart(2, '0')}
         </span>
