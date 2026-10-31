@@ -13,6 +13,7 @@ export default function Nav() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [avatarFailed, setAvatarFailed] = useState(false)
   const triggerRef = useRef(null)
   const { pathname } = useLocation()
 
@@ -63,8 +64,17 @@ export default function Nav() {
           className="group flex min-h-11 items-center gap-3 whitespace-nowrap active:scale-[0.97] transition-transform duration-100"
           aria-label="Mary Grace V. Soronio, Home"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-accent/40 bg-accent-soft text-accent font-mono text-xs font-bold shadow-sm transition-colors duration-150 group-hover:border-accent group-hover:bg-accent-soft-hover">
-            MG
+          <div className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-accent/40 bg-accent-soft text-accent font-mono text-xs font-bold shadow-sm ring-1 ring-accent/20 transition-all duration-200 group-hover:border-accent group-hover:ring-accent/40 group-hover:shadow-[0_0_12px_rgba(168,85,247,0.35)]">
+            {!avatarFailed ? (
+              <img
+                src="/mary-grace-1x1-id-image.jpg"
+                alt="Mary Grace V. Soronio"
+                className="h-full w-full object-cover object-top transition-transform duration-200 group-hover:scale-105"
+                onError={() => setAvatarFailed(true)}
+              />
+            ) : (
+              'MG'
+            )}
           </div>
           <div className="flex flex-col justify-center">
             <span className="font-display text-sm font-semibold tracking-tight text-ink transition-colors duration-150 group-hover:text-accent-light lg:text-base">
