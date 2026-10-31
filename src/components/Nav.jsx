@@ -12,6 +12,7 @@ import { contact } from '../data/site.js'
 export default function Nav() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
   const triggerRef = useRef(null)
   const { pathname } = useLocation()
 
@@ -20,15 +21,21 @@ export default function Nav() {
     setOpen(false)
   }, [pathname])
 
-  // Scroll detection for elevated header polish
+  // Scroll detection and progress calculation
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20)
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      if (maxScroll > 0) {
+        setScrollProgress(Math.min(1, Math.max(0, window.scrollY / maxScroll)))
+      } else {
+        setScrollProgress(0)
+      }
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll()
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [pathname])
 
   // Auto-close mobile drawer on desktop resize breakpoint (>=1024px)
   useEffect(() => {
@@ -129,6 +136,13 @@ export default function Nav() {
           </button>
         </div>
       </div>
+
+      {/* Scroll Telemetry Progress Bar */}
+      <div
+        className="scroll-progress-bar"
+        style={{ transform: `scaleX(${scrollProgress})` }}
+        aria-hidden="true"
+      />
 
       {/* Mobile Navigation Drawer with focus return to triggerRef */}
       <MobileDrawer open={open} onClose={() => setOpen(false)} triggerRef={triggerRef} />

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
+import ImageWithSkeleton from '../components/ImageWithSkeleton.jsx'
 import {
   developerProfile,
   education,
@@ -101,11 +102,14 @@ export default function About() {
         <Reveal className="lg:col-span-5">
           <div className="sticky top-24 space-y-lg">
             <figure className="relative mx-auto overflow-hidden rounded-card border border-rule bg-paper-2 shadow-card transition-transform duration-300 hover:border-rule-2">
-              <img
+              <ImageWithSkeleton
                 src={developerProfile?.portrait || '/mary-grace-1x1-id-image.jpg'}
                 alt="Mary Grace V. Soronio - Embedded Systems Engineer"
                 width={640}
                 height={640}
+                loading="eager"
+                aspectRatio="aspect-square"
+                containerClassName="aspect-square w-full"
                 className="aspect-square w-full object-cover object-top transition-transform duration-300 hover:scale-[1.02]"
               />
               {/* OJT Callout Badge Overlay */}

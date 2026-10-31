@@ -571,10 +571,95 @@
     color: var(--color-accent-ink);
   }
 
+  /* --------------------------------------------------------------------------
+     Tech Marquee & Skeleton Shimmer Animations
+     -------------------------------------------------------------------------- */
+  @keyframes marquee {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  @keyframes marquee-reverse {
+    from {
+      transform: translate3d(-50%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .animate-marquee {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+    animation: marquee 32s linear infinite;
+  }
+
+  .animate-marquee-reverse {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+    animation: marquee-reverse 32s linear infinite;
+  }
+
+  .pause-on-hover:hover .animate-marquee,
+  .pause-on-hover:hover .animate-marquee-reverse {
+    animation-play-state: paused;
+  }
+
+  .mask-gradient-x {
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  }
+
+  @keyframes shimmer-sweep {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--theme-paper-3) 0%,
+      var(--theme-paper-4) 50%,
+      var(--theme-paper-3) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer-sweep 1800ms ease-in-out infinite;
+  }
+
+  .scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 60;
+    transform-origin: left;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-light));
+    box-shadow: 0 0 10px var(--color-accent);
+    pointer-events: none;
+    transition: transform 75ms ease-out;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ambient-canvas,
     .signal-bar {
       display: none !important;
+    }
+
+    .animate-marquee,
+    .animate-marquee-reverse,
+    .skeleton-shimmer {
+      animation: none !important;
     }
 
     .page-enter,

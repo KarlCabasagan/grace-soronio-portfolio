@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard.jsx'
 import Reveal from '../components/Reveal.jsx'
+import TechMarquee from '../components/TechMarquee.jsx'
 import { projects } from '../data/projects.js'
 import { toolchain, developerProfile, contact } from '../data/site.js'
 
@@ -43,6 +45,15 @@ const engineeringPillars = [
 ]
 
 function TelemetryPanel() {
+  const [clockSpeed, setClockSpeed] = useState('160')
+
+  const changeClock = (mhz, multiplier) => {
+    setClockSpeed(mhz)
+    window.dispatchEvent(
+      new CustomEvent('particle-speed-change', { detail: { multiplier } })
+    )
+  }
+
   return (
     <div className="rounded-card border border-rule bg-paper-2/80 p-lg shadow-card backdrop-blur-md">
       <div className="flex items-center justify-between gap-sm border-b border-rule pb-sm">
@@ -77,6 +88,36 @@ function TelemetryPanel() {
         <p className="font-display text-section font-semibold tabular-nums text-accent-light">
           {projects.length}
         </p>
+      </div>
+
+      {/* Interactive Mesh Telemetry Clock Switcher */}
+      <div className="mt-md border-t border-rule pt-md">
+        <div className="flex items-center justify-between">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-muted">
+            Mesh Telemetry Clock
+          </p>
+          <span className="font-mono text-[10px] text-accent-light">Interactive Bus</span>
+        </div>
+        <div className="mt-xs grid grid-cols-3 gap-2xs" role="group" aria-label="Canvas clock speed">
+          {[
+            { mhz: '80', label: '80 MHz', mult: 0.8 },
+            { mhz: '160', label: '160 MHz', mult: 1.6 },
+            { mhz: '240', label: '240 MHz', mult: 2.5 },
+          ].map((item) => (
+            <button
+              key={item.mhz}
+              type="button"
+              onClick={() => changeClock(item.mhz, item.mult)}
+              className={`min-h-8 rounded-pill border px-2xs font-mono text-[11px] transition-all duration-150 active:scale-[0.96] ${
+                clockSpeed === item.mhz
+                  ? 'border-accent bg-accent text-accent-ink font-medium shadow-card'
+                  : 'border-rule bg-paper-3 text-muted hover:border-accent-light hover:text-ink'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="mt-md" aria-hidden="true">
@@ -157,6 +198,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Hardware & Software Verified Toolchain Marquee */}
+      <TechMarquee />
 
       {/* Cyber-Physical Engineering Pillars (The 3 Capabilities) */}
       <section className="border-t border-rule bg-paper-2/20">

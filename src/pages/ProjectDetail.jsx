@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { projects } from '../data/projects.js'
 import { galleryFor } from '../data/media.js'
+import ImageWithSkeleton from '../components/ImageWithSkeleton.jsx'
 
 /**
  * Curated Quick Spec Sheet / HUD Telemetry for all 17 authentic projects.
@@ -447,14 +448,16 @@ export default function ProjectDetail() {
             <CircuitSchematicFallback project={project} />
           ) : (
             <div className="overflow-hidden rounded-card border border-rule bg-paper-3 shadow-card">
-              <img
+              <ImageWithSkeleton
                 src={project.image}
                 alt={`${project.title}: ${project.subtitle}`}
                 width={project.w || 900}
                 height={project.h || 562}
                 loading="eager"
                 decoding="async"
-                onError={() => setMainImageFailed(true)}
+                fallbackText={project.title}
+                aspectRatio="aspect-[16/10]"
+                containerClassName="w-full"
                 className="max-h-[70dvh] w-full object-cover"
               />
             </div>
@@ -519,14 +522,13 @@ export default function ProjectDetail() {
                         key={src}
                         className="overflow-hidden rounded-card border border-rule bg-paper-3 shadow-card"
                       >
-                        <img
+                        <ImageWithSkeleton
                           src={src}
                           alt={`${project.title}, exhibit capture`}
                           loading="lazy"
                           decoding="async"
-                          onError={() =>
-                            setFailedGalleryImages((prev) => ({ ...prev, [src]: true }))
-                          }
+                          aspectRatio="aspect-[16/10]"
+                          containerClassName="w-full"
                           className="aspect-[16/10] w-full object-cover transition-transform duration-300 hover:scale-[1.02]"
                         />
                         <figcaption className="p-sm font-mono text-xs text-muted max-w-[65ch]">

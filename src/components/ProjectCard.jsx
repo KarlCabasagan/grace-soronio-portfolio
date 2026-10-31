@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import ImageWithSkeleton from './ImageWithSkeleton.jsx'
 
 function Arrow() {
   return (
@@ -13,8 +13,6 @@ function Arrow() {
 }
 
 export default function ProjectCard({ project, index, featured = false, eager = false }) {
-  const [failed, setFailed] = useState(false)
-
   return (
     <Link
       to={`/projects/${project.slug}`}
@@ -27,23 +25,19 @@ export default function ProjectCard({ project, index, featured = false, eager = 
           featured ? 'aspect-[16/10]' : 'aspect-[16/10]'
         }`}
       >
-        {failed ? (
-          <div className="flex h-full w-full items-center justify-center p-lg">
-            <span className="font-mono text-xs text-muted">{project.title}</span>
-          </div>
-        ) : (
-          <img
-            src={project.image}
-            alt={`${project.title}: ${project.subtitle}`}
-            width={project.w}
-            height={project.h}
-            loading={eager ? 'eager' : 'lazy'}
-            decoding="async"
-            onError={() => setFailed(true)}
-            className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
-          />
-        )}
-        <span className="absolute left-md top-md rounded-pill border border-rule-2 bg-paper/85 px-sm py-3xs font-mono text-xs tabular-nums text-ink-2 backdrop-blur-sm">
+        <ImageWithSkeleton
+          src={project.image}
+          alt={`${project.title}: ${project.subtitle}`}
+          width={project.w}
+          height={project.h}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          fallbackText={project.title}
+          aspectRatio="aspect-[16/10]"
+          containerClassName="h-full w-full"
+          className="h-full w-full object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
+        />
+        <span className="absolute left-md top-md z-20 rounded-pill border border-rule-2 bg-paper/85 px-sm py-3xs font-mono text-xs tabular-nums text-ink-2 backdrop-blur-sm">
           {String(index + 1).padStart(2, '0')}
         </span>
       </div>

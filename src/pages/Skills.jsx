@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Reveal from '../components/Reveal.jsx'
+import TechMarquee from '../components/TechMarquee.jsx'
 import { certifications, skills, toolchain, trainings } from '../data/site.js'
 
 // Detailed toolchain groups mapping to developer specialties
@@ -85,6 +86,11 @@ export default function Skills() {
           Grouped by where the work happens: the bare silicon, the firmware kernel, the FPGA synthesis suite, the edge machine learning model, and the interface.
         </p>
       </header>
+
+      {/* Looped Toolchain & Architecture Marquee */}
+      <div className="mt-2xl">
+        <TechMarquee label="CONTINUOUS HARDWARE & SYSTEMS BUS" />
+      </div>
 
       {/* Interactive Filter Pills */}
       <div className="mt-xl flex flex-wrap items-center gap-xs border-b border-rule pb-md">

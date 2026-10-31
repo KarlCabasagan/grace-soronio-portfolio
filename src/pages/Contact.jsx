@@ -530,6 +530,20 @@ export default function Contact() {
           </form>
         </ScrollReveal>
       </div>
+
+      {/* Tactile Copy-to-Clipboard Confirmation Toast */}
+      {copiedEmail && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-xs rounded-pill border border-accent bg-paper-2/95 px-md py-sm shadow-elevated backdrop-blur-xl transition-all"
+        >
+          <span className="flex h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="font-mono text-xs text-ink">
+            Email copied to clipboard &bull; Direct response within 24h
+          </span>
+        </div>
+      )}
     </div>
   )
 }

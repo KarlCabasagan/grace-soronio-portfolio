@@ -1,13 +1,17 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * ParticleBackground: 60fps GPU-accelerated HTML5 Canvas simulating
- * hardware telemetry circuit nodes with interactive mouse spring dynamics.
+ * ParticleBackground: High-craft 60fps GPU-accelerated HTML5 Canvas simulating
+ * hardware telemetry circuit nodes with interactive mouse spring dynamics,
+ * cursor spotlight torch, click shockwaves, and luminous data packet trails.
  *
  * Design Engineering Specifications:
  * - 60fps/120fps display refresh synchronized via requestAnimationFrame
- * - Mouse spring interaction: Hooke's law perturbation + viscous damping
- * - Hardware telemetry aesthetic: test pads, signal traces, and animated data packets
+ * - Interactive Cursor Spotlight: Soft radial amethyst glow tracking pointer
+ * - Constellation Laser Tethers: High-energy traces connecting cursor to nearby nodes
+ * - Click Shockwave Ripples: Radial impulse wave pushing nodes with spring restitution
+ * - High-Velocity Telemetry Packets: 16 packets with glowing phosphor trails
+ * - Clock Speed Telemetry Listener: Responds to 'particle-speed-change' custom event
  * - Zero CPU waste: automatically halts when document.hidden (tab unfocused)
  * - Strict reduced motion: completely halts to 0fps when prefers-reduced-motion is active
  * - High-DPI Retina support: devicePixelRatio coordinate compensation
@@ -21,7 +25,6 @@ export default function ParticleBackground() {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    // Gracefully degrade if canvas 2D context cannot be acquired
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
@@ -35,6 +38,10 @@ export default function ParticleBackground() {
     let isRunning = true
     let nodes = []
     let packets = []
+    let ripples = []
+
+    // Energy / Clock speed multiplier (1.0 = 80MHz default, 1.6 = 160MHz, 2.4 = 240MHz turbo)
+    let speedMultiplier = 1.0
 
     // Theme RGB color coordinates (Dark default: #9d4edd / #c084fc; Light: #7c3aed / #8b5cf6)
     let accentRgb = '157, 78, 221'
@@ -52,37 +59,42 @@ export default function ParticleBackground() {
       }
     }
 
-    // Pointer state
+    // Pointer state with smooth trailing
     const pointer = {
       x: -9999,
       y: -9999,
+      targetX: -9999,
+      targetY: -9999,
       active: false,
     }
 
     const initNetwork = (w, h) => {
-      // Dynamic density based on viewport area (16 to 50 nodes)
-      const count = Math.max(16, Math.min(50, Math.round((w * h) / 36000)))
+      // Dynamic density based on viewport area (24 to 64 nodes)
+      const count = Math.max(24, Math.min(64, Math.round((w * h) / 28000)))
       nodes = Array.from({ length: count }, () => {
-        const isTelemetryPad = Math.random() < 0.18 // 18% of nodes are PCB telemetry pads
+        const isTelemetryPad = Math.random() < 0.22 // 22% of nodes are PCB telemetry pads
+        const vx = (Math.random() - 0.5) * 0.35
+        const vy = (Math.random() - 0.5) * 0.35
         return {
           x: Math.random() * w,
           y: Math.random() * h,
-          vx: (Math.random() - 0.5) * 0.22,
-          vy: (Math.random() - 0.5) * 0.22,
-          baseVx: (Math.random() - 0.5) * 0.22,
-          baseVy: (Math.random() - 0.5) * 0.22,
-          r: isTelemetryPad ? 2.4 : Math.random() * 1.2 + 0.8,
+          vx,
+          vy,
+          baseVx: vx,
+          baseVy: vy,
+          r: isTelemetryPad ? 2.8 : Math.random() * 1.4 + 1.0,
           isPad: isTelemetryPad,
-          padRadius: isTelemetryPad ? 4.8 : 0,
+          padRadius: isTelemetryPad ? 5.5 : 0,
+          pulse: Math.random() * Math.PI * 2,
         }
       })
 
-      // Allocate telemetry signal packets (8 packets traversing active circuit lines)
-      packets = Array.from({ length: 8 }, () => ({
+      // Allocate telemetry signal packets (16 packets traversing active circuit lines)
+      packets = Array.from({ length: 16 }, () => ({
         from: Math.floor(Math.random() * count),
         to: Math.floor(Math.random() * count),
         progress: Math.random(),
-        speed: 0.012 + Math.random() * 0.018,
+        speed: 0.014 + Math.random() * 0.022,
       }))
     }
 
@@ -101,25 +113,91 @@ export default function ParticleBackground() {
       syncThemeColors()
     }
 
+    const onSpeedChange = (e) => {
+      if (typeof e.detail?.multiplier === 'number') {
+        speedMultiplier = e.detail.multiplier
+      }
+    }
+
     const render = () => {
       if (!isRunning) return
 
       ctx.clearRect(0, 0, width, height)
 
-      const connectionDistance = 140
+      // Smooth pointer coordinate lerp
+      if (pointer.active) {
+        pointer.x += (pointer.targetX - pointer.x) * 0.2
+        pointer.y += (pointer.targetY - pointer.y) * 0.2
+      }
+
+      // 1. Render Interactive Cursor Spotlight Glow
+      if (pointer.active && pointer.x > 0 && pointer.y > 0) {
+        const spotlightRadius = 240
+        const glow = ctx.createRadialGradient(
+          pointer.x,
+          pointer.y,
+          0,
+          pointer.x,
+          pointer.y,
+          spotlightRadius
+        )
+        glow.addColorStop(0, `rgba(${accentRgb}, 0.16)`)
+        glow.addColorStop(0.4, `rgba(${accentRgb}, 0.05)`)
+        glow.addColorStop(1, 'rgba(0, 0, 0, 0)')
+
+        ctx.fillStyle = glow
+        ctx.beginPath()
+        ctx.arc(pointer.x, pointer.y, spotlightRadius, 0, Math.PI * 2)
+        ctx.fill()
+      }
+
+      // 2. Render & Update Click Shockwave Ripples
+      for (let r = ripples.length - 1; r >= 0; r--) {
+        const rip = ripples[r]
+        rip.radius += rip.speed
+        rip.alpha *= 0.94
+
+        if (rip.alpha < 0.01 || rip.radius > rip.maxRadius) {
+          ripples.splice(r, 1)
+          continue
+        }
+
+        ctx.strokeStyle = `rgba(${highlightRgb}, ${rip.alpha})`
+        ctx.lineWidth = 1.5
+        ctx.beginPath()
+        ctx.arc(rip.x, rip.y, rip.radius, 0, Math.PI * 2)
+        ctx.stroke()
+
+        // Ripple impulse force on nodes
+        for (let i = 0; i < nodes.length; i++) {
+          const p = nodes[i]
+          const dx = p.x - rip.x
+          const dy = p.y - rip.y
+          const d = Math.sqrt(dx * dx + dy * dy)
+          const diff = Math.abs(d - rip.radius)
+          if (diff < 30 && d > 1) {
+            const push = (1 - diff / 30) * 1.4 * rip.alpha
+            p.vx += (dx / d) * push
+            p.vy += (dy / d) * push
+          }
+        }
+      }
+
+      const connectionDistance = 155
       const connectionDistSq = connectionDistance * connectionDistance
-      const mouseRadius = 175
+      const mouseRadius = 190
       const mouseRadiusSq = mouseRadius * mouseRadius
 
-      // 1. Update Physics & Spring Interactions
+      // 3. Update Physics & Spring Interactions
       for (let i = 0; i < nodes.length; i++) {
         const p = nodes[i]
+        p.pulse += 0.035
 
-        // Restitution towards baseline ambient drift
-        p.vx += (p.baseVx - p.vx) * 0.04
-        p.vy += (p.baseVy - p.vy) * 0.04
+        // Restitution towards baseline ambient drift multiplied by speedMultiplier
+        p.vx += (p.baseVx * speedMultiplier - p.vx) * 0.05
+        p.vy += (p.baseVy * speedMultiplier - p.vy) * 0.05
 
-        // Mouse Spring Displacement
+        // Mouse Spring Displacement (repulsion + orbit)
         if (pointer.active) {
           const dx = p.x - pointer.x
           const dy = p.y - pointer.y
@@ -127,16 +205,15 @@ export default function ParticleBackground() {
 
           if (d2 < mouseRadiusSq && d2 > 1) {
             const d = Math.sqrt(d2)
-            // Hooke-inspired spring perturbation force
-            const springForce = ((mouseRadius - d) / mouseRadius) * 0.65
+            const springForce = ((mouseRadius - d) / mouseRadius) * 0.75
             p.vx += (dx / d) * springForce
             p.vy += (dy / d) * springForce
           }
         }
 
         // Viscous damping
-        p.vx *= 0.95
-        p.vy *= 0.95
+        p.vx *= 0.94
+        p.vy *= 0.94
 
         p.x += p.vx
         p.y += p.vy
@@ -148,7 +225,7 @@ export default function ParticleBackground() {
         if (p.y > height + 24) p.y = -24
       }
 
-      // 2. Render Circuit Traces (Connections)
+      // 4. Render Circuit Traces (Connections between nodes)
       const activePairs = []
       for (let i = 0; i < nodes.length; i++) {
         const a = nodes[i]
@@ -160,26 +237,49 @@ export default function ParticleBackground() {
 
           if (d2 < connectionDistSq) {
             const dist = Math.sqrt(d2)
-            const alpha = (1 - dist / connectionDistance) * 0.18
+            // Enhanced alpha for crisp visibility
+            const alpha = (1 - dist / connectionDistance) * 0.28
             ctx.strokeStyle = `rgba(${accentRgb}, ${alpha})`
-            ctx.lineWidth = 0.65
+            ctx.lineWidth = 0.75
             ctx.beginPath()
             ctx.moveTo(a.x, a.y)
             ctx.lineTo(b.x, b.y)
             ctx.stroke()
 
-            if (activePairs.length < 32) {
+            if (activePairs.length < 48) {
               activePairs.push({ i, j })
             }
           }
         }
       }
 
-      // 3. Render Telemetry Signal Data Packets
+      // 5. Render Constellation Laser Tethers to Cursor
+      if (pointer.active && pointer.x > 0 && pointer.y > 0) {
+        const tetherDist = 175
+        const tetherDistSq = tetherDist * tetherDist
+        for (let i = 0; i < nodes.length; i++) {
+          const p = nodes[i]
+          const dx = p.x - pointer.x
+          const dy = p.y - pointer.y
+          const d2 = dx * dx + dy * dy
+          if (d2 < tetherDistSq) {
+            const dist = Math.sqrt(d2)
+            const alpha = (1 - dist / tetherDist) * 0.38
+            ctx.strokeStyle = `rgba(${highlightRgb}, ${alpha})`
+            ctx.lineWidth = 1.0
+            ctx.beginPath()
+            ctx.moveTo(p.x, p.y)
+            ctx.lineTo(pointer.x, pointer.y)
+            ctx.stroke()
+          }
+        }
+      }
+
+      // 6. Render Telemetry Signal Data Packets with Phosphor Trails
       if (activePairs.length > 0) {
         for (let k = 0; k < packets.length; k++) {
           const pkt = packets[k]
-          pkt.progress += pkt.speed
+          pkt.progress += pkt.speed * speedMultiplier
 
           const a = nodes[pkt.from]
           const b = nodes[pkt.to]
@@ -192,33 +292,51 @@ export default function ParticleBackground() {
             continue
           }
 
-          // Packet position along circuit trace
           const px = a.x + (b.x - a.x) * pkt.progress
           const py = a.y + (b.y - a.y) * pkt.progress
 
-          ctx.fillStyle = `rgba(${highlightRgb}, 0.75)`
+          // Trail segment
+          const trailLength = 0.12
+          const tailProgress = Math.max(0, pkt.progress - trailLength)
+          const tx = a.x + (b.x - a.x) * tailProgress
+          const ty = a.y + (b.y - a.y) * tailProgress
+
+          const packetGrad = ctx.createLinearGradient(tx, ty, px, py)
+          packetGrad.addColorStop(0, `rgba(${highlightRgb}, 0)`)
+          packetGrad.addColorStop(1, `rgba(${highlightRgb}, 0.85)`)
+
+          ctx.strokeStyle = packetGrad
+          ctx.lineWidth = 1.8
           ctx.beginPath()
-          ctx.arc(px, py, 1.4, 0, Math.PI * 2)
+          ctx.moveTo(tx, ty)
+          ctx.lineTo(px, py)
+          ctx.stroke()
+
+          // Packet head glow
+          ctx.fillStyle = `rgba(${highlightRgb}, 0.95)`
+          ctx.beginPath()
+          ctx.arc(px, py, 1.8, 0, Math.PI * 2)
           ctx.fill()
         }
       }
 
-      // 4. Render Telemetry Nodes and Test Pads
+      // 7. Render Telemetry Nodes and Concentric Test Pads
       for (let i = 0; i < nodes.length; i++) {
         const p = nodes[i]
+        const pulseEffect = Math.sin(p.pulse) * 0.3 + 1.0
 
         // Center dot
-        ctx.fillStyle = `rgba(${accentRgb}, 0.45)`
+        ctx.fillStyle = `rgba(${accentRgb}, ${p.isPad ? 0.85 : 0.6})`
         ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.arc(p.x, p.y, p.r * (p.isPad ? 1.0 : pulseEffect), 0, Math.PI * 2)
         ctx.fill()
 
         // Concentric ring for PCB test pads
         if (p.isPad) {
-          ctx.strokeStyle = `rgba(${highlightRgb}, 0.22)`
-          ctx.lineWidth = 0.75
+          ctx.strokeStyle = `rgba(${highlightRgb}, ${0.35 + Math.sin(p.pulse) * 0.15})`
+          ctx.lineWidth = 0.85
           ctx.beginPath()
-          ctx.arc(p.x, p.y, p.padRadius, 0, Math.PI * 2)
+          ctx.arc(p.x, p.y, p.padRadius * pulseEffect, 0, Math.PI * 2)
           ctx.stroke()
         }
       }
@@ -228,18 +346,33 @@ export default function ParticleBackground() {
 
     // Event Handlers
     const onPointerMove = (e) => {
-      pointer.x = e.clientX
-      pointer.y = e.clientY
+      pointer.targetX = e.clientX
+      pointer.targetY = e.clientY
+      if (!pointer.active) {
+        pointer.x = e.clientX
+        pointer.y = e.clientY
+      }
       pointer.active = true
     }
 
     const onPointerLeave = () => {
-      pointer.x = -9999
-      pointer.y = -9999
+      pointer.targetX = -9999
+      pointer.targetY = -9999
       pointer.active = false
     }
 
-    // Tab unfocus optimization: freeze animation when tab hidden to eliminate CPU usage
+    const onPointerDown = (e) => {
+      // Trigger interactive shockwave ripple
+      ripples.push({
+        x: e.clientX,
+        y: e.clientY,
+        radius: 8,
+        maxRadius: Math.min(width, height) * 0.45,
+        alpha: 0.7,
+        speed: 6.5,
+      })
+    }
+
     const onVisibilityChange = () => {
       isRunning = !document.hidden
       if (isRunning) {
@@ -249,7 +382,6 @@ export default function ParticleBackground() {
       }
     }
 
-    // Reduced motion dynamic listener (handles on-the-fly toggling in devtools / OS)
     const onMotionPreferenceChange = (e) => {
       if (e.matches) {
         isRunning = false
@@ -262,21 +394,20 @@ export default function ParticleBackground() {
       }
     }
 
-    // Initial setup
     resize()
     rafId = window.requestAnimationFrame(render)
 
-    // MutationObserver for instant theme toggle reactivity
     const themeObserver = new MutationObserver(syncThemeColors)
     themeObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['data-theme', 'class'],
     })
 
-    // Register listeners
     window.addEventListener('resize', resize)
     window.addEventListener('pointermove', onPointerMove, { passive: true })
     window.addEventListener('pointerleave', onPointerLeave)
+    window.addEventListener('pointerdown', onPointerDown)
+    window.addEventListener('particle-speed-change', onSpeedChange)
     document.addEventListener('visibilitychange', onVisibilityChange)
     motionQuery.addEventListener('change', onMotionPreferenceChange)
 
@@ -287,6 +418,8 @@ export default function ParticleBackground() {
       window.removeEventListener('resize', resize)
       window.removeEventListener('pointermove', onPointerMove)
       window.removeEventListener('pointerleave', onPointerLeave)
+      window.removeEventListener('pointerdown', onPointerDown)
+      window.removeEventListener('particle-speed-change', onSpeedChange)
       document.removeEventListener('visibilitychange', onVisibilityChange)
       motionQuery.removeEventListener('change', onMotionPreferenceChange)
     }
