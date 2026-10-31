@@ -16,9 +16,9 @@ export default function Hero() {
             <span className="text-muted">ILIGAN CITY</span>
           </div>
 
-          <h1 className="mt-md text-display text-ink">A Board That Plays Für Elise</h1>
+          <h1 className="mt-md text-display text-ink">Hardware-Software Co-Design</h1>
           <p className="mt-lg max-w-[65ch] text-lead text-ink-2">
-            Fourth-year embedded systems student at MSU-IIT. I build physical devices and digital telemetry dashboards.
+            Fourth-year embedded systems student at MSU-IIT engineering physical microcontrollers, RTOS telemetry pipelines, and real-time systems.
           </p>
           <div className="mt-xl flex flex-wrap items-center gap-sm">
             <a className="btn btn-primary" href="#work">

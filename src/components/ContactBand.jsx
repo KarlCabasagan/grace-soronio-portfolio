@@ -5,9 +5,9 @@ export default function ContactBand() {
     <section id="contact" className="bg-band pt-5xl pb-4xl">
       <div className="shell grid gap-2xl lg:grid-cols-12 lg:items-end lg:gap-col">
         <div className="lg:col-span-7">
-          <h2 className="text-display-s text-accent-ink">Seven Hundred Hours</h2>
+          <h2 className="text-display-s text-accent-ink">700-Hour OJT Commitment</h2>
           <p className="mt-md max-w-prose text-lead text-accent-ink">
-            That is the OJT I am looking for. I want to build and ship physical hardware systems and connected dashboards on an engineering team.
+            Available for 700 hours of On-the-Job Training to engineer firmware architectures, sensor telemetry, and reliable cyber-physical systems alongside an active engineering team.
           </p>
         </div>
 

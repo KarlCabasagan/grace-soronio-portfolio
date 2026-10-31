@@ -11,7 +11,7 @@ const telemetryReadout = [
   { label: 'Institution', value: 'MSU-IIT (CCS)' },
   { label: 'Program', value: 'BS Computer Applications' },
   { label: 'Major', value: 'Embedded Systems' },
-  { label: 'Academic Standing', value: 'CGPA 1.67351, Dean\u2019s Lister' },
+  { label: 'Academic Honors', value: 'Dean\u2019s Lister, MSU-IIT' },
   { label: 'Target OJT', value: '700 Hours (Available)' },
   { label: 'Flagship Thesis', value: 'FERMONITOR (E-Nose ML)' },
   { label: 'Target Silicon', value: 'STM32 \u00B7 ESP32 \u00B7 RPi \u00B7 FPGA' },
@@ -167,13 +167,12 @@ export default function Home() {
               Mary Grace V. Soronio · Embedded Systems Engineer
             </p>
             <h1 className="mt-xs font-display text-display font-semibold tracking-tight text-ink">
-              I build the device and the dashboard.
+              Engineering embedded hardware and real-time telemetry systems.
             </h1>
             <p className="mt-lg max-w-[65ch] text-lead text-ink-2">
               Fourth-year BS Computer Applications student at MSU-IIT specializing in Embedded
-              Systems (CGPA 1.67351, Dean’s Lister). I engineer physical hardware devices and
-              digital telemetry systems—from bare-metal AVR, FreeRTOS sensor networks, and FPGA logic
-              to real-time connected dashboards.
+              Systems (Dean’s Lister). Developing cyber-physical systems across bare-metal AVR,
+              FreeRTOS sensor telemetry, FPGA digital logic, and connected web architectures.
             </p>
 
             {/* Tactile Call-To-Action buttons */}
